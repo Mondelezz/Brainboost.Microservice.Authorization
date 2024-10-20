@@ -1,3 +1,4 @@
+using API.Options;
 using Microsoft.OpenApi.Models;
 
 namespace Keycloak.Auth.Api.Extensions;
@@ -6,6 +7,10 @@ internal static class ServiceCollectionExtensions
 {
     internal static IServiceCollection AddSwaggerGenWithAuth(this IServiceCollection services, IConfiguration configuration)
     {
+        KeycloakOptions keycloakOptions = configuration
+            .GetSection(nameof(KeycloakOptions))
+            .Get<KeycloakOptions>()!;
+
         services.AddSwaggerGen(o =>
         {
             #region SwaggerDoc
@@ -67,7 +72,7 @@ internal static class ServiceCollectionExtensions
                 {
                     Implicit = new OpenApiOAuthFlow
                     {
-                        AuthorizationUrl = new Uri(configuration["Keycloak:AuthorizationUrl"]!),
+                        AuthorizationUrl = new Uri(keycloakOptions.AuthorizationUrl),
                         Scopes = new Dictionary<string, string>
                         {
                             { "openid", "openid" },
@@ -99,7 +104,6 @@ internal static class ServiceCollectionExtensions
 
             o.AddSecurityRequirement(securityRequirement);
         });
-
 
         return services;
     }

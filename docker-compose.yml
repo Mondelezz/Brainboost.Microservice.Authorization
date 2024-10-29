@@ -22,34 +22,40 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
-      POSTGRES_DB: keycloak
-      POSTGRES_USER: keycloak
-      POSTGRES_PASSWORD: password
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
       - "5434:5432"
     container_name: postgresql_keycloak
 
   keycloak:
     image: quay.io/keycloak/keycloak:latest
+    container_name: keycloak_server
+    environment:
+      DB_VENDOR: ${DB_VENDOR}
+      DB_ADDR: database
+      DB_PORT: 5432
+      DB_SCHEMA: public
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      KEYCLOAK_USER: ${KEYCLOAK_USER}
+      KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KC_PROXY_MODE: edge
+      KC_METRICS_ENABLED: true
+      KC_HTTP_ENABLED: true
     ports:
       - "4444:8080"
     depends_on:
       - postgres
-    container_name: keycloak_server
-    environment:
-      KEYCLOAK_ADMIN: admin 
-      KEYCLOAK_ADMIN_PASSWORD: admin
-      DB_VENDOR: POSTGRES
-      DB_ADDR: postgres
-      DB_DATABASE: keycloak
-      DB_USER: keycloak
-      DB_SCHEMA: public
-      DB_PASSWORD: password
+    restart: unless-stopped
     command: ["start-dev"]
     networks:
       - keycloak-network
 
-  
   prometheus:
     image: prom/prometheus:latest
     container_name: Prometheus

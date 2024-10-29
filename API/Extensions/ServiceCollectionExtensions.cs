@@ -65,9 +65,6 @@ internal static class ServiceCollectionExtensions
             o.AddSecurityDefinition("Keycloak", new OpenApiSecurityScheme
             {
                 Type = SecuritySchemeType.OAuth2,
-                In = ParameterLocation.Header,
-                BearerFormat = "Jwt",
-                Name = "Authorization",
                 Flows = new OpenApiOAuthFlows
                 {
                     Implicit = new OpenApiOAuthFlow
@@ -95,8 +92,6 @@ internal static class ServiceCollectionExtensions
                         In = ParameterLocation.Header,
                         Name = "Bearer",
                         Scheme = "Bearer",
-                        BearerFormat = "Jwt",
-                        Description = "Keycloak Authorization header using the Bearer scheme."
                     },
                     []
                 }

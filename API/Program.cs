@@ -23,6 +23,7 @@ try
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGenWithAuth(builder.Configuration);
 
+    builder.Services.AddAuthorization();
     builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(o =>
         {
@@ -34,7 +35,6 @@ try
                 ValidIssuer = authOptions.ValidIssuer
             };
         });
-    builder.Services.AddAuthorization();
 
     builder.Services.AddJaeger();
     builder.Services.AddPrometheus();

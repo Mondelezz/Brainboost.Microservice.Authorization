@@ -4,6 +4,8 @@ using Serilog;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using API.Options;
+using Application;
+using API.Abstraction.Users;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -28,6 +30,8 @@ try
         .AddJwtBearer(o =>
         {
             o.RequireHttpsMetadata = false;
+
+            o.Authority = authOptions.Authority;
             o.Audience = authOptions.Audience;
             o.MetadataAddress = authOptions.MetadataAddress;
             o.TokenValidationParameters = new TokenValidationParameters
@@ -36,6 +40,7 @@ try
             };
         });
 
+    builder.Services.RegisterApplicationLayer(builder.Configuration);
     builder.Services.AddJaeger();
     builder.Services.AddPrometheus();
 
@@ -53,16 +58,16 @@ try
 
     app.UseHttpsRedirection();
 
-    app.MapGet("users/me", (ClaimsPrincipal claimsPrincipal) =>
-    {
-        return claimsPrincipal.Claims.ToDictionary(c => c.Type, c => c.Value);
-    }).RequireAuthorization();
-
     app.UseAuthentication();
 
     app.UseAuthorization();
 
     app.MapControllers();
+
+    app.MapGet("users/me", (ClaimsPrincipal claimsPrincipal) =>
+    {
+        return claimsPrincipal.Claims.ToDictionary(c => c.Type, c => c.Value);
+    }).RequireAuthorization();
 
     app.Run();
 

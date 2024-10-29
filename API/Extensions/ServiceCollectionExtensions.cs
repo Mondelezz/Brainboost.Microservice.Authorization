@@ -5,7 +5,9 @@ namespace Keycloak.Auth.Api.Extensions;
 
 internal static class ServiceCollectionExtensions
 {
-    internal static IServiceCollection AddSwaggerGenWithAuth(this IServiceCollection services, IConfiguration configuration)
+    internal static IServiceCollection AddSwaggerGenWithAuth(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
         KeycloakOptions keycloakOptions = configuration
             .GetSection(nameof(KeycloakOptions))

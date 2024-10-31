@@ -5,7 +5,6 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using API.Options;
 using Application;
-using API.Abstraction.Users;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()

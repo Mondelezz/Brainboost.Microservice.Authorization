@@ -13,8 +13,7 @@ public class AdministratorController(IUserService userService) : Controller
     /// <returns></returns>
     [Authorize]
     [HttpGet("get-users-from-realm")]
-    public async Task<ActionResult<IReadOnlyList<UserRepresentation>>> GetUsersFromRealm(
-        string nameRealm)
+    public async Task<ActionResult<IReadOnlyList<UserRepresentation>>> GetUsersFromRealm(string nameRealm)
     {
         IList<UserRepresentation> users = await userService.GetUsersFromRealmAsync(nameRealm);
 

@@ -1,4 +1,4 @@
-﻿using Application.Abstraction.UserAbstraction;
+using Application.Abstraction.UserAbstraction;
 using Application.Options;
 using FS.Keycloak.RestApiClient.Api;
 using FS.Keycloak.RestApiClient.Authentication.Client;
@@ -13,15 +13,31 @@ namespace Application.UserFeatures.UserService;
 public class UserService(IConfiguration configuration) : IUserService
 {
     /// <summary>
-    /// The method gets all users from the specified realm.
+    /// Получает пользователя по идентификатору из указанной области
     /// </summary>
-    /// <param name="nameRealm">Name realm.</param>
-    /// <returns>List of users.</returns>
+    /// <param name="nameRealm">Наименование области.</param>
+    /// <param name="userId">Идентификатор пользователя.</param>
+    /// <returns>Пользователь</returns>
+    public async Task<UserRepresentation> GetUserFromRealmByIdAsync(string nameRealm, string userId)
+    {
+        using UsersApi usersApi = CreateUsersApi(nameRealm);
+
+        UserRepresentation user = await usersApi.GetUsersByUserIdAsync(nameRealm, userId)
+            ?? throw new Exception();
+
+        return user;
+    }
+
+    /// <summary>
+    /// Получает список пользователей из указанной области 
+    /// </summary>
+    /// <param name="nameRealm">Наименование области.</param>
+    /// <returns>Список пользователей.</returns>
     public async Task<IList<UserRepresentation>> GetUsersFromRealmAsync(string nameRealm)
     {
-        using var usersApi = CreateUsersApi(nameRealm);
+        using UsersApi usersApi = CreateUsersApi(nameRealm);
 
-        IList<UserRepresentation> users =  await usersApi.GetUsersAsync(nameRealm);
+        IList<UserRepresentation> users = await usersApi.GetUsersAsync(nameRealm);
 
         return users;
     }

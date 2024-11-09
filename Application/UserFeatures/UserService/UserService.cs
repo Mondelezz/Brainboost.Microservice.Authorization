@@ -1,4 +1,5 @@
 using Application.Abstraction.UserAbstraction;
+using Application.Common.Exceptions;
 using Application.Options;
 using FS.Keycloak.RestApiClient.Api;
 using FS.Keycloak.RestApiClient.Authentication.Client;
@@ -23,7 +24,7 @@ public class UserService(IConfiguration configuration) : IUserService
         using UsersApi usersApi = CreateUsersApi(nameRealm);
 
         UserRepresentation user = await usersApi.GetUsersByUserIdAsync(nameRealm, userId)
-            ?? throw new Exception();
+            ?? throw new EntityNotFoundException(userId, "User");
 
         return user;
     }

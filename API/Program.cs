@@ -45,6 +45,20 @@ try
 
     WebApplication app = builder.Build();
 
+    app.UseCors(builder =>
+    {
+        builder.AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader();
+
+        builder.WithOrigins(
+            "http://localhost:4200",
+            "https://localhost:4200")
+        .AllowCredentials()
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+    });
+
     if (app.Environment.IsDevelopment())
     {
         app.UseSwagger();

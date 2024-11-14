@@ -1,0 +1,215 @@
+body{
+    background-image: url('../img/login_background.jpg');
+    background-size: cover;
+}
+
+.kc-logo-text {
+    display: none;
+}
+
+.pf-v5-c-login__main {
+    background-color: rgba(255, 255, 255, 0.28);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    width: 600px;
+    color: black;
+    height: auto; /* Даем контейнеру возможность адаптироваться к высоте контента */
+    min-height: 500px; /* Можно задать минимальную высоту, если хотите, чтобы форма не была слишком маленькой */
+}
+
+.pf-v5-c-form__label-required {
+    color: red; /* Цвет звёздочки */
+}
+
+.pf-v5-c-helper-text__item-text {
+    color: #0a143d; /* Цвет основного текста */
+    font-weight: bold;
+    font-size: 20px;
+}
+
+
+.pf-v5-c-form__label-text {
+    font-weight: bold;
+    color: #0a143d;
+    font-size: 14px;
+}
+.pf-v5-c-title {
+    text-align: center;
+    color: #0a143d;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.pf-v5-c-form-control {
+    background-color: transparent; /* Полная прозрачность */
+    border: none;                  /* Убираем рамку */
+    box-shadow: none;              /* Убираем тени */
+    padding: 0;                    /* Убираем внутренние отступы, если это не нарушает расположение */
+}
+
+
+.pf-v5-c-button.pf-m-primary {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 1rem;
+    border: none;
+    border-radius: 5px;
+    background-color: #0a143d;
+    color: white;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.pf-v5-c-button.pf-m-primary:hover {
+    background-color: #006983;
+}
+
+.pf-v5-c-button.pf-m-control {
+    position: absolute;
+    right: 10px; /* Отступ справа от края поля ввода */
+    top: 50%;
+    transform: translateY(-50%); /* Центрирует кнопку по вертикали */
+    background: none;
+    border: none;
+    color: #0a143d;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.pf-v5-c-input-group {
+    position: relative; /* Позволяет кнопке позиционироваться внутри контейнера */
+    width: 100%;
+}
+
+.pf-v5-c-button.pf-m-control:hover {
+    color: #006983;
+}
+
+.pf-v5-c-login__main-footer-band-item {
+    color: #0a143d;
+    font-weight: bold;
+}
+
+.pf-v5-c-form__group {
+    display: flex;
+    flex-direction: column; /* Располагаем кнопки в столбик */
+    gap: 10px; /* Отступ между кнопками */
+    align-items: stretch; /* Растягиваем кнопки по ширине контейнера */
+}
+
+.pf-v5-c-button.btn-default.pf-m-block.btn-lg {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #0a143d;
+    color: white;
+    font-size: 16px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.pf-v5-c-button.btn-default.pf-m-block.btn-lg:hover {
+    background-color: #006983; /* Цвет при наведении */
+}
+
+.pf-v5-c-alert.pf-m-inline.pf-m-danger {
+    background-color: rgba(255, 0, 0, 0.1); /* Лёгкий красный оттенок */
+    border: 1px solid #ff4c4c; /* Красная рамка */
+    padding: 15px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Отступ между иконкой и текстом */
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+}
+
+.pf-v5-c-alert__icon .fa-exclamation-circle {
+    color: #ff4c4c; /* Красный цвет для иконки */
+    font-size: 20px; /* Размер иконки */
+}
+
+.pf-v5-c-alert__title.kc-feedback-text {
+    color: #0a143d; /* Цвет текста предупреждения */
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.pf-v5-c-alert.pf-m-inline.pf-m-info {
+    background-color: rgba(0, 123, 255, 0.1); /* Лёгкий синий оттенок фона */
+    border: 1px solid #007bff; /* Синяя рамка */
+    padding: 15px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Отступ между иконкой и текстом */
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.3); /* Лёгкая синяя тень */
+}
+
+.pf-v5-c-alert__icon .fa-info-circle {
+    color: #007bff; /* Синий цвет для иконки */
+    font-size: 20px; /* Размер иконки */
+}
+
+.pf-v5-c-alert__title.kc-feedback-text {
+    color: #0a143d; /* Цвет текста */
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.pf-v5-c-brand {
+    display : none;
+}
+
+#kc-registration-container {
+    font-weight: bold;
+    color: #0a143d;
+}
+
+/* Стили для ссылки внутри блока регистрации */
+#kc-registration-container a {
+    color: #0a143d; /* Тот же цвет, что и у текста */
+    text-decoration: underline; /* Подчёркивание ссылки */
+}
+
+#kc-registration-container a:hover {
+    color: #ced4da; /* Цвет при наведении */
+    text-decoration: underline; /* Оставить подчёркивание при наведении */
+}
+
+#kc-form-options a {
+    color: #0a143d; /* Цвет текста */
+    text-decoration: underline; /* Подчёркивание ссылки */
+    font-weight: bold; /* Делаем текст жирным, если нужно */
+}
+
+#kc-form-options a:hover {
+    color: #ced4da; /* Цвет при наведении */
+    text-decoration: underline; /* Оставляем подчёркивание при наведении */
+}
+
+/* Общие стили для всех полей ввода */
+#username, #password, #password-confirm, #email, #firstName, #lastName {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #0a143d;
+    color: black;
+    font-weight: bold;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.164); /* Лёгкий белый оттенок для прозрачности */
+    transition: background-color 0.3s;
+}
+
+/* Стили для состояния фокуса */
+#username:focus, #password:focus, #password-confirm:focus, #email:focus, #firstName:focus, #lastName:focus {
+    background-color: rgba(255, 255, 255, 0.2); /* Меняем цвет при фокусе */
+    border-color: #0a143d; /* Цвет рамки при фокусе */
+    outline: none;
+}
+
+

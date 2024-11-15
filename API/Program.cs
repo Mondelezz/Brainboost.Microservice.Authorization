@@ -1,10 +1,5 @@
-using Keycloak.Auth.Api.Extensions;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Serilog;
-using System.Security.Claims;
-using Microsoft.IdentityModel.Tokens;
-using API.Options;
-using Application;
+using API;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -16,73 +11,11 @@ try
 {
     WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-    AuthenticationOptions authOptions = builder.Configuration
-        .GetSection(nameof(AuthenticationOptions))
-        .Get<AuthenticationOptions>()!;
-
-    builder.Services.AddControllers();
-    builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGenWithAuth(builder.Configuration);
-
-    builder.Services.AddAuthorization();
-    builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-        .AddJwtBearer(o =>
-        {
-            o.RequireHttpsMetadata = false;
-
-            o.Authority = authOptions.Authority;
-            o.Audience = authOptions.Audience;
-            o.MetadataAddress = authOptions.MetadataAddress;
-            o.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidIssuer = authOptions.ValidIssuer
-            };
-        });
-
-    builder.Services.RegisterApplicationLayer(builder.Configuration);
-    builder.Services.AddJaeger();
-    builder.Services.AddPrometheus();
-
-    WebApplication app = builder.Build();
-
-    app.UseCors(builder =>
-    {
-        builder.AllowAnyOrigin()
-        .AllowAnyMethod()
-        .AllowAnyHeader();
-
-        builder.WithOrigins(
-            "http://localhost:4200",
-            "https://localhost:4200")
-        .AllowCredentials()
-        .AllowAnyHeader()
-        .AllowAnyMethod();
-    });
-
-    if (app.Environment.IsDevelopment())
-    {
-        app.UseSwagger();
-        app.UseSwaggerUI();
-    }
-
-    app.UseOpenTelemetryPrometheusScrapingEndpoint();
-
-    app.MapPrometheusScrapingEndpoint();
-
-    app.UseHttpsRedirection();
-
-    app.UseAuthentication();
-
-    app.UseAuthorization();
-
-    app.MapControllers();
-
-    app.MapGet("users/me", (ClaimsPrincipal claimsPrincipal) =>
-    {
-        return claimsPrincipal.Claims.ToDictionary(c => c.Type, c => c.Value);
-    }).RequireAuthorization();
-
-    app.Run();
+    await builder
+        .ConfigureServices()
+        .Build()
+        .ConfigurePipeline()
+        .RunAsync();
 
 }
 catch (Exception ex)

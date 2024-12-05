@@ -1,4 +1,4 @@
-version: '3.4'
+version: '1.0'
 
 services:
   api:
@@ -17,21 +17,52 @@ services:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
 
-  keycloak:
-    image: quay.io/keycloak/keycloak:latest
-    container_name: keycloak_server
+  keycloak-postgres:
+    container_name: postgres_keycloak
+    image: postgres:16
+    volumes:
+      - ./db-data:/var/lib/postgresql/data/
+      - ./sql:/docker-entrypoint-initdb.d/:ro
     environment:
-      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
-      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
-      KC_METRICS_ENABLED: true
-      KC_HEALTH_ENABLED: true
-      KC_HTTP_ENABLED: true
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 26032005
+      POSTGRES_DB: postgres
+    healthcheck:
+      test: pg_isready -d postgres
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    ports:
+      - "5432:5432"
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0.7
+    container_name: keycloak_server
+    command: start --db postgres --hostname-strict false --http-enabled true --import-realm
+    environment:
+      KC_DB_URL: jdbc:postgresql://keycloak-postgres:5432/postgres
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: 26032005
+      KC_DB_SCHEMA: public
+      KC_FEATURES: preview
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    depends_on:
+      keycloak-postgres:
+        condition: service_healthy
     ports:
       - "4444:8080"
-    restart: unless-stopped
-    command: ["start-dev"]
-    volumes:
-      - ./opt/keycloak/themes:/opt/keycloak/themes
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://0.0.0.0:8080/realms/master"]
+      start_period: 10s
+      interval: 30s
+      retries: 3
+      timeout: 5s
 
   prometheus:
     image: prom/prometheus:latest
@@ -46,6 +77,3 @@ services:
       - "4317:4317"
       - "4318:4318"
       - "16686:16686"
-
-networks:
-  keycloak-network:

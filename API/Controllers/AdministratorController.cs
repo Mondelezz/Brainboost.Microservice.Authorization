@@ -9,7 +9,7 @@ namespace API.Controllers;
 /// <summary>
 /// Контроллер для работы с пользователями.
 /// </summary>
-[Route("api/v1/user")]
+[Route("user")]
 public class AdministratorController(IUserService userService) : Controller
 {
     /// <summary>

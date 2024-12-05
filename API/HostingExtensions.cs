@@ -62,6 +62,10 @@ internal static class HostingExtensions
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+        else
+        {
+            app.UseMiddleware<GlobalErrorHandlingMiddleware>();
+        }
 
         app.UseRouting();
 

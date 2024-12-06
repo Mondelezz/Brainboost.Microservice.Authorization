@@ -26,7 +26,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 26032005
-      POSTGRES_DB: postgres
+      POSTGRES_DB: keycloak
     healthcheck:
       test: pg_isready -d postgres
       interval: 10s
@@ -45,13 +45,13 @@ services:
     container_name: keycloak_server
     command: start --db postgres --hostname-strict false --http-enabled true --import-realm
     environment:
-      KC_DB_URL: jdbc:postgresql://keycloak-postgres:5432/postgres
+      KC_DB_URL: jdbc:postgresql://keycloak-postgres:5432/keycloak
       KC_DB_USERNAME: postgres
       KC_DB_PASSWORD: 26032005
       KC_DB_SCHEMA: public
       KC_FEATURES: preview
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
     depends_on:
       keycloak-postgres:
         condition: service_healthy

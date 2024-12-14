@@ -6,10 +6,7 @@ services:
     build:
       context: .
       dockerfile: API/Dockerfile
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
+    env_file: ".api.env"
     ports:
       - "5000:8080"
       - "5001:8081"
@@ -23,35 +20,47 @@ services:
     volumes:
       - ./db-data:/var/lib/postgresql/data/
       - ./sql:/docker-entrypoint-initdb.d/:ro
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 26032005
-      POSTGRES_DB: keycloak
+    env_file: ".postgres.env"
     healthcheck:
       test: pg_isready -d postgres
       interval: 10s
       timeout: 5s
-      retries: 3
-      start_period: 5s
+      retries: 5
+      start_period: 10s
     ports:
       - "5432:5432"
     deploy:
       resources:
         limits:
-          memory: 256M
+          memory: 4G
+
+  postgres_exporter:
+    container_name: exporter_container
+    image: prometheuscommunity/postgres-exporter:v0.10.1
+    env_file: ".postgres.env"
+    volumes:
+      - ./queries.yaml:/etc/postgres_exporter/queries.yaml:ro
+    ports:
+      - "9187:9187"
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 500M
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    env_file: ".postgres.env"
+    ports:
+      - "5050:80"
 
   keycloak:
     image: quay.io/keycloak/keycloak:26.0.7
     container_name: keycloak_server
     command: start --db postgres --hostname-strict false --http-enabled true --import-realm
-    environment:
-      KC_DB_URL: jdbc:postgresql://keycloak-postgres:5432/keycloak
-      KC_DB_USERNAME: postgres
-      KC_DB_PASSWORD: 26032005
-      KC_DB_SCHEMA: public
-      KC_FEATURES: preview
-      KC_BOOTSTRAP_ADMIN_USERNAME: admin
-      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+    env_file: ".keycloak.env"
     depends_on:
       keycloak-postgres:
         condition: service_healthy
@@ -77,3 +86,4 @@ services:
       - "4317:4317"
       - "4318:4318"
       - "16686:16686"
+

@@ -7,9 +7,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API", "API\API.csproj", "{A
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D4A73FC5-E1C4-4FC5-8C9E-0938A34F2D83}"
 	ProjectSection(SolutionItems) = preProject
+		.api.env = .api.env
 		.dockerignore = .dockerignore
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
+		.keycloak.env = .keycloak.env
+		.postgres.env = .postgres.env
 	EndProjectSection
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{E82CC11C-B49C-4D4F-96ED-D35ACF56A908}"

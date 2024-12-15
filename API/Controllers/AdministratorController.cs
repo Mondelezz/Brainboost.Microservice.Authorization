@@ -2,14 +2,13 @@ using Application.Abstraction.UserAbstraction;
 using FS.Keycloak.RestApiClient.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace API.Controllers;
 
 /// <summary>
-/// Контроллер для работы с пользователями.
+/// Контроллер для работы администратора.
 /// </summary>
-[Route("user")]
+[Route("api/v1/admin")]
 public class AdministratorController(IUserService userService) : Controller
 {
     /// <summary>
@@ -30,47 +29,14 @@ public class AdministratorController(IUserService userService) : Controller
     /// Получает пользователя по идентификатору.
     /// </summary>
     /// <param name="nameRealm">Наименование области.</param>
-    /// <param name="currentUserId"></param>
+    /// <param name="userId">Id пользователя.</param>
     /// <returns></returns>
     [Authorize]
-    [HttpGet("{currentUserId}")]
-    public async Task<ActionResult<UserRepresentation>> GetUserByIdAsync(string nameRealm, string currentUserId)
+    [HttpGet("{userId}")]
+    public async Task<ActionResult<UserRepresentation>> GetUserByIdAsync(string nameRealm, string userId)
     {
-        UserRepresentation user = await userService.GetUserFromRealmByIdAsync(nameRealm, currentUserId);
+        UserRepresentation user = await userService.GetUserFromRealmByIdAsync(nameRealm, userId);
 
         return Ok(user);
-    }
-
-    /// <summary>
-    /// Получает информацию своего профиля.
-    /// </summary>
-    /// <returns>Инофрмация пользователя.</returns>
-    [Authorize]
-    [HttpGet("get-my-profile")]
-    public ActionResult<UserRepresentation> GetCurrentUserClaims()
-    {
-        ClaimsPrincipal claimsPrincipal = HttpContext.User;
-
-        if (claimsPrincipal is null)
-        {
-            return NotFound();
-        }
-
-        List<string> claimTypes = new(
-        [
-            ClaimTypes.Email,
-            ClaimTypes.NameIdentifier,
-            ClaimTypes.Role,
-            ClaimTypes.GivenName,
-            ClaimTypes.Surname,
-            "preferred_username"
-        ]);
-
-        Dictionary<string, string> claimsDictionary = claimTypes
-            .Select(type => claimsPrincipal.Claims.FirstOrDefault(c => c.Type == type))
-            .Where(c => c != null)
-            .ToDictionary(c => c!.Type, c => c!.Value);
-
-        return Ok(claimsDictionary);
     }
 }

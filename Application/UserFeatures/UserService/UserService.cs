@@ -8,6 +8,7 @@ using FS.Keycloak.RestApiClient.Authentication.Flow;
 using FS.Keycloak.RestApiClient.ClientFactory;
 using FS.Keycloak.RestApiClient.Model;
 using Microsoft.Extensions.Configuration;
+using System.Security.Claims;
 
 namespace Application.UserFeatures.UserService;
 
@@ -41,6 +42,21 @@ public class UserService(IConfiguration configuration) : IUserService
         IList<UserRepresentation> users = await usersApi.GetUsersAsync(nameRealm);
 
         return users;
+    }
+
+    /// <summary>
+    /// Получает информацию профиля текущего пользователя
+    /// </summary>
+    /// <param name="claimsPrincipal">Пользователь</param>
+    /// <returns>Словарь с данными пользователя</returns>
+    public Dictionary<string, string> GetMyProfile(ClaimsPrincipal claimsPrincipal)
+    {
+        List<string> claimTypes = new([ClaimTypes.Email, ClaimTypes.NameIdentifier, ClaimTypes.Role, ClaimTypes.GivenName, ClaimTypes.Surname, "preferred_username"]);
+
+        return claimTypes
+            .Select(type => claimsPrincipal.Claims.FirstOrDefault(c => c.Type == type))
+            .Where(c => c != null)
+            .ToDictionary(c => c!.Type, c => c!.Value);
     }
 
     private UsersApi CreateUsersApi(string nameRealm)

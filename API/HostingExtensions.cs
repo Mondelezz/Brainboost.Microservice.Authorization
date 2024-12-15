@@ -81,11 +81,6 @@ internal static class HostingExtensions
 
         app.MapControllers();
 
-        app.MapGet("users/me", (ClaimsPrincipal claimsPrincipal) =>
-        {
-            return claimsPrincipal.Claims.ToDictionary(c => c.Type, c => c.Value);
-        }).RequireAuthorization();
-
         return app;
     }
 }

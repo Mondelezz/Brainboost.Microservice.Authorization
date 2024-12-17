@@ -10,6 +10,7 @@ using FS.Keycloak.RestApiClient.Model;
 using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
 
+
 namespace Application.UserFeatures.UserService;
 
 public class UserService(IConfiguration configuration) : IUserService

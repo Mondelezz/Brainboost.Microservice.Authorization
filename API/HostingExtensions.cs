@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using API.Options;
 using Application;
-using System.Security.Claims;
 
 namespace API;
 

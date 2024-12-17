@@ -19,7 +19,7 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\Application.csproj", "{0A956487-6B41-40ED-886E-87F54163F8DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Keycloak.Tests", "..\Keycloak.Tests\Keycloak.Tests.csproj", "{2C6C8681-51B3-4434-96F1-2B2F90C4E59E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Keycloak.Tests", "Keycloak.Tests\Keycloak.Tests.csproj", "{2C6C8681-51B3-4434-96F1-2B2F90C4E59E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -19,6 +19,8 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\Application.csproj", "{0A956487-6B41-40ED-886E-87F54163F8DD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Keycloak.Tests", "..\Keycloak.Tests\Keycloak.Tests.csproj", "{2C6C8681-51B3-4434-96F1-2B2F90C4E59E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{0A956487-6B41-40ED-886E-87F54163F8DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A956487-6B41-40ED-886E-87F54163F8DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A956487-6B41-40ED-886E-87F54163F8DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C6C8681-51B3-4434-96F1-2B2F90C4E59E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C6C8681-51B3-4434-96F1-2B2F90C4E59E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C6C8681-51B3-4434-96F1-2B2F90C4E59E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C6C8681-51B3-4434-96F1-2B2F90C4E59E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -44,6 +50,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{A4402DAB-9CE0-4AA2-89A6-479E13562A72} = {D4A73FC5-E1C4-4FC5-8C9E-0938A34F2D83}
 		{0A956487-6B41-40ED-886E-87F54163F8DD} = {D4A73FC5-E1C4-4FC5-8C9E-0938A34F2D83}
+		{2C6C8681-51B3-4434-96F1-2B2F90C4E59E} = {D4A73FC5-E1C4-4FC5-8C9E-0938A34F2D83}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {35BD86BA-4DD8-4327-87F3-6BE3EDCB5765}

@@ -57,7 +57,7 @@ services:
       - "5050:80"
 
   keycloak:
-    image: quay.io/keycloak/keycloak:26.0.7
+    image: keycloak/keycloak:26.0
     container_name: keycloak_server
     command: start --db postgres --hostname-strict false --http-enabled true --import-realm
     env_file: ".keycloak.env"
@@ -65,13 +65,15 @@ services:
       keycloak-postgres:
         condition: service_healthy
     ports:
-      - "4444:8080"
+      - "8443:8443"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://0.0.0.0:8080/realms/master"]
       start_period: 10s
       interval: 30s
       retries: 3
       timeout: 5s
+    volumes:
+      - ./Keycloak.Tests/bin/Debug/net8.0/Certs:/opt/keycloak/certs
+      - ./opt/keycloak/themes:/opt/keycloak/themes
 
   prometheus:
     image: prom/prometheus:latest

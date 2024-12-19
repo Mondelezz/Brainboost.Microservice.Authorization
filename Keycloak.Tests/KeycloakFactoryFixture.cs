@@ -7,15 +7,18 @@ namespace Keycloak.Tests;
 
 public sealed class KeycloakFactoryFixture : WebApplicationFactory<IApiMarker>, IAsyncLifetime
 {
-    public string? BaseAddress { get; set; } = "https://localhost:4444";
+    public string? BaseAddress { get; set; } = "https://localhost:8443";
 
     private readonly KeycloakContainer _keycloak = new KeycloakBuilder()
-    .WithImage("quay.io/keycloak/keycloak:26.0.7")
-    .WithName("keycloak")
-    .WithPortBinding(4444, 8080)
-    .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(8080))
-    .WithCleanUp(true)
-    .Build();
+        .WithImage("keycloak/keycloak:26.0")
+        .WithPortBinding(8443, 8443)
+        .WithName("keycloakTestContainer")
+        .WithResourceMapping("./Certs", "/opt/keycloak/certs")
+        .WithEnvironment("KC_HTTPS_CERTIFICATE_FILE", "/opt/keycloak/certs/certificate.pem")
+        .WithEnvironment("KC_HTTPS_CERTIFICATE_KEY_FILE", "/opt/keycloak/certs/certificate.key")
+        .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(8443))
+        .WithCleanUp(true)
+        .Build();
 
     async Task IAsyncLifetime.InitializeAsync() => await _keycloak.StartAsync();
 

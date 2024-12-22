@@ -14,6 +14,7 @@ public sealed class KeycloakFactoryFixture : WebApplicationFactory<IApiMarker>, 
         .WithPortBinding(8443, 8443)
         .WithName("keycloakTestContainer")
         .WithResourceMapping("./Certs", "/opt/keycloak/certs")
+        .WithResourceMapping("./Import/Brainboost-realm.json", "/opt/keycloak/data/import")
         .WithEnvironment("KC_HTTPS_CERTIFICATE_FILE", "/opt/keycloak/certs/certificate.crt")
         .WithEnvironment("KC_HTTPS_CERTIFICATE_KEY_FILE", "/opt/keycloak/certs/certificate.key")
         .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(8443))

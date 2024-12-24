@@ -9,14 +9,15 @@ public sealed class UserServiceTest(KeycloakFactoryFixture keycloakFactory)
     private readonly HttpClient _httpClient = keycloakFactory.CreateClient();
     private readonly string _baseAddress = keycloakFactory.BaseAddress
         ?? string.Empty;
+    private readonly HttpClient _client = new();
 
     // Область и клиент сервера Keycloak
     private const string Realm = "Brainboost";
     private const string Client = "brainboost";
 
     // Данные для тестирования
-    private const string Username = "Gryphon";
-    private const string Password = "aZnagib60";
+    private const string Username = "Vlad";
+    private const string Password = "1q2w3e4r";
     private const string GrantType = "password";
 
     [Fact]
@@ -34,15 +35,12 @@ public sealed class UserServiceTest(KeycloakFactoryFixture keycloakFactory)
             { "password", $"{Password}" }
         };
 
-        using (HttpClient _client = new())
-        {
-            HttpResponseMessage response = await _client.PostAsync(urlToken, new FormUrlEncodedContent(data));
-            JsonObject? content = await response.Content.ReadFromJsonAsync<JsonObject>();
-            string? token = content?["access_token"]?.ToString();
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-        }
+        HttpResponseMessage response = await _client.PostAsync(urlToken, new FormUrlEncodedContent(data));
+        JsonObject? content = await response.Content.ReadFromJsonAsync<JsonObject>();
+        string? token = content?["access_token"]?.ToString();
 
         // Act
+        _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
         HttpResponseMessage result = await _httpClient.GetAsync(requestUri);
 
         //Assert

@@ -18,20 +18,19 @@ internal static class HostingExtensions
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGenWithAuth(builder.Configuration);
 
-        builder.Services.AddAuthorization();
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(o =>
             {
                 o.RequireHttpsMetadata = false;
-
                 o.Authority = authOptions.Authority;
-                o.Audience = authOptions.Audience;
                 o.MetadataAddress = authOptions.MetadataAddress;
                 o.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidIssuer = authOptions.ValidIssuer
+                    ValidIssuer = authOptions.ValidIssuer,
+                    ValidAudiences = authOptions.Audience
                 };
             });
+        builder.Services.AddAuthorization();
 
         builder.Services.RegisterApplicationLayer(builder.Configuration);
         builder.Services.AddJaeger();
@@ -49,8 +48,8 @@ internal static class HostingExtensions
             .AllowAnyHeader();
 
             builder.WithOrigins(
-                "http://localhost:4200",
-                "https://localhost:4200")
+                "http://localhost:5000",
+                "https://localhost:5001")
             .AllowCredentials()
             .AllowAnyHeader()
             .AllowAnyMethod();

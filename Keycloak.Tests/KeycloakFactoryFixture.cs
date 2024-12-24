@@ -7,13 +7,14 @@ namespace Keycloak.Tests;
 
 public sealed class KeycloakFactoryFixture : WebApplicationFactory<IApiMarker>, IAsyncLifetime
 {
-    public string? BaseAddress { get; set; } = "https://localhost:8443";
+    public string? BaseAddress { get; set; } = "https://localhost:8000";
 
     private readonly KeycloakContainer _keycloak = new KeycloakBuilder()
         .WithImage("keycloak/keycloak:26.0")
-        .WithPortBinding(8443, 8443)
+        .WithPortBinding(8000, 8443)
         .WithName("keycloakTestContainer")
         .WithResourceMapping("./Certs", "/opt/keycloak/certs")
+        .WithCommand("--import-realm")
         .WithResourceMapping("./Import/Brainboost-realm.json", "/opt/keycloak/data/import")
         .WithEnvironment("KC_HTTPS_CERTIFICATE_FILE", "/opt/keycloak/certs/certificate.crt")
         .WithEnvironment("KC_HTTPS_CERTIFICATE_KEY_FILE", "/opt/keycloak/certs/certificate.key")

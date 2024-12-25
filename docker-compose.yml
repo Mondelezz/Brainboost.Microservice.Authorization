@@ -58,14 +58,14 @@ services:
 
   keycloak:
     image: keycloak/keycloak:26.0
-    container_name: keycloak_server
-    command: start --db postgres --hostname my.keycloak_server.org --import-realm
+    container_name: keycloak
+    command: start --db postgres --hostname https://my.keycloak.org:8443 --hostname-backchannel-dynamic true --hostname-strict true --import-realm
     env_file: ".keycloak.env"
     depends_on:
       keycloak-postgres:
         condition: service_healthy
     ports:
-      - "8000:8443"
+      - "8443:8443"
     healthcheck:
       start_period: 10s
       interval: 30s

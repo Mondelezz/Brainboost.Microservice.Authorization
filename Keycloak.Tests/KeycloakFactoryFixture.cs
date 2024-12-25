@@ -7,11 +7,11 @@ namespace Keycloak.Tests;
 
 public sealed class KeycloakFactoryFixture : WebApplicationFactory<IApiMarker>, IAsyncLifetime
 {
-    public string? BaseAddress { get; set; } = "https://localhost:8000";
+    public string? BaseAddress { get; set; } = "https://my.keycloak.org:8443";
 
     private readonly KeycloakContainer _keycloak = new KeycloakBuilder()
         .WithImage("keycloak/keycloak:26.0")
-        .WithPortBinding(8000, 8443)
+        .WithPortBinding(8443, 8443)
         .WithName("keycloakTestContainer")
         .WithResourceMapping("./Certs", "/opt/keycloak/certs")
         .WithCommand("--import-realm")

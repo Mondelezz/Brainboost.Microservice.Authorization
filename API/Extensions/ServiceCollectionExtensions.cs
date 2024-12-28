@@ -37,9 +37,10 @@ internal static class ServiceCollectionExtensions
                 Type = SecuritySchemeType.OAuth2,
                 Flows = new OpenApiOAuthFlows
                 {
-                    Implicit = new OpenApiOAuthFlow
+                    AuthorizationCode = new OpenApiOAuthFlow
                     {
                         AuthorizationUrl = new Uri(keycloakOptions.AuthorizationUrl),
+                        TokenUrl = new Uri("https://my.keycloak.org:8443/realms/Brainboost/protocol/openid-connect/token"),
                         Scopes = new Dictionary<string, string>
                         {
                             { "openid", "openid" },
@@ -63,7 +64,7 @@ internal static class ServiceCollectionExtensions
                         Name = "Bearer",
                         Scheme = "Bearer",
                     },
-                    []
+                    new List<string> { "openid", "profile" }
                 }
             };
 

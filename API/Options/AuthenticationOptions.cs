@@ -6,4 +6,6 @@ public class AuthenticationOptions
     public string ValidIssuer { get; set; } = string.Empty;
     public IList<string> Audience { get; set; } = [];
     public string Authority { get; set; } = string.Empty;
+    public HashSet<string> Certificates { get; set; } = [];
+    public HashSet<string> Keys { get; set; } = [];
 }

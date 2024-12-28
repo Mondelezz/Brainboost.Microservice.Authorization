@@ -15,14 +15,34 @@ internal static class HostingExtensions
     public static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder builder)
     {
         AuthenticationOptions authOptions = builder.Configuration
-        .GetSection(nameof(AuthenticationOptions))
-        .Get<AuthenticationOptions>()!;
+            .GetSection(nameof(AuthenticationOptions))
+            .Get<AuthenticationOptions>()!;
 
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGenWithAuth(builder.Configuration);
 
         builder.Host.UseSerilog();
+
+        //TODO: В рабочей среде заменить на динамическое получение ключа подписи.
+
+        #region *** Create jwk with appsettings.json ***
+        JsonWebKeyOptions jwkOptions = builder.Configuration
+            .GetSection(nameof(JsonWebKeyOptions))
+            .Get<JsonWebKeyOptions>()!;
+
+        JsonWebKey jwk = new()
+        {
+            Kid = jwkOptions.Kid,
+            Kty = jwkOptions.Kty,
+            Alg = jwkOptions.Alg,
+            Use = jwkOptions.Use,
+            N = jwkOptions.N,
+            E = jwkOptions.E,
+            X5t = jwkOptions.X5t,
+            X5tS256 = jwkOptions.X5tS256
+        };
+        #endregion
 
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(o =>
@@ -39,12 +59,13 @@ internal static class HostingExtensions
                     ValidIssuer = authOptions.ValidIssuer,
                     ValidAudiences = authOptions.Audience,
                     ValidateIssuerSigningKey = true,
-                    ValidateLifetime = true
+                    ValidateLifetime = true,
+                    IssuerSigningKey = jwk
                 };
                 o.ConfigurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
                     authOptions.MetadataAddress,
                     new OpenIdConnectConfigurationRetriever(),
-                    new HttpDocumentRetriever { RequireHttps = false })
+                    new HttpDocumentRetriever { RequireHttps = true })
                 {
                     RefreshInterval = TimeSpan.FromMinutes(60),
                     AutomaticRefreshInterval = TimeSpan.FromMinutes(60)
@@ -52,14 +73,13 @@ internal static class HostingExtensions
 
                 o.Events = new JwtBearerEvents
                 {
-                    // Логируем ошибку аутентификации
                     OnAuthenticationFailed = context =>
                     {
                         Log.Information("Authentication failed: " + context.Exception.Message);
                         Log.Information("Token: " + context.Request.Headers.Authorization);
+                        Log.Information("Exception details: " + context.Exception.ToString());
                         return Task.CompletedTask;
                     },
-                    // Логируем успешную валидацию токена
                     OnTokenValidated = context =>
                     {
                         Log.Information("Token validated: " + context.SecurityToken);

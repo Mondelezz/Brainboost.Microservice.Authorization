@@ -8,8 +8,8 @@ using FS.Keycloak.RestApiClient.Authentication.Flow;
 using FS.Keycloak.RestApiClient.ClientFactory;
 using FS.Keycloak.RestApiClient.Model;
 using Microsoft.Extensions.Configuration;
+using Serilog;
 using System.Security.Claims;
-
 
 namespace Application.UserFeatures.UserService;
 
@@ -23,12 +23,20 @@ public class UserService(IConfiguration configuration) : IUserService
     /// <returns>Пользователь</returns>
     public async Task<UserRepresentation> GetUserFromRealmByIdAsync(string nameRealm, string userId)
     {
-        using UsersApi usersApi = CreateUsersApi(nameRealm);
+        try
+        {
+            using UsersApi usersApi = CreateUsersApi(nameRealm);
 
-        UserRepresentation user = await usersApi.GetUsersByUserIdAsync(nameRealm, userId)
-            ?? throw new EntityNotFoundException(userId, "User");
+            UserRepresentation user = await usersApi.GetUsersByUserIdAsync(nameRealm, userId)
+                ?? throw new EntityNotFoundException(userId, "User");
 
-        return user;
+            return user;
+        }
+        catch (Exception ex)
+        {
+            Log.Logger.Error("*** Error message ", ex);
+            throw;
+        }
     }
 
     /// <summary>

@@ -21,7 +21,6 @@ internal static class HostingExtensions
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGenWithAuth(builder.Configuration);
-
         builder.Host.UseSerilog();
 
         //TODO: В рабочей среде заменить на динамическое получение ключа подписи.
@@ -30,18 +29,6 @@ internal static class HostingExtensions
         JsonWebKeyOptions jwkOptions = builder.Configuration
             .GetSection(nameof(JsonWebKeyOptions))
             .Get<JsonWebKeyOptions>()!;
-
-        JsonWebKey jwk = new()
-        {
-            Kid = jwkOptions.Kid,
-            Kty = jwkOptions.Kty,
-            Alg = jwkOptions.Alg,
-            Use = jwkOptions.Use,
-            N = jwkOptions.N,
-            E = jwkOptions.E,
-            X5t = jwkOptions.X5t,
-            X5tS256 = jwkOptions.X5tS256
-        };
         #endregion
 
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -60,7 +47,17 @@ internal static class HostingExtensions
                     ValidAudiences = authOptions.Audience,
                     ValidateIssuerSigningKey = true,
                     ValidateLifetime = true,
-                    IssuerSigningKey = jwk
+                    IssuerSigningKey = new JsonWebKey()
+                    {
+                        Kid = jwkOptions.Kid,
+                        Kty = jwkOptions.Kty,
+                        Alg = jwkOptions.Alg,
+                        Use = jwkOptions.Use,
+                        N = jwkOptions.N,
+                        E = jwkOptions.E,
+                        X5t = jwkOptions.X5t,
+                        X5tS256 = jwkOptions.X5tS256
+                    }
                 };
                 o.ConfigurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
                     authOptions.MetadataAddress,
@@ -109,8 +106,8 @@ internal static class HostingExtensions
             .AllowAnyHeader();
 
             builder.WithOrigins(
-                "http://localhost:5000",
-                "https://localhost:5001")
+                "http://localhost:4000",
+                "https://localhost:4001")
             .AllowCredentials()
             .AllowAnyHeader()
             .AllowAnyMethod();

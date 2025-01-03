@@ -2,5 +2,6 @@ namespace API.Options;
 
 public class KeycloakOptions
 {
-    public string AuthorizationUrl { get; set; } = string.Empty;
+    public required string AuthorizationUrl { get; set; }
+    public required string TokenUrl { get; set; }
 }

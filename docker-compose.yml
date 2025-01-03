@@ -13,6 +13,7 @@ services:
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ./Keycloak.Tests/bin/Debug/net8.0/Certs/certificate.crt:/usr/local/share/ca-certificates/certificate.crt
 
   keycloak-postgres:
     container_name: postgres_keycloak
@@ -59,13 +60,14 @@ services:
   keycloak:
     image: keycloak/keycloak:26.0
     container_name: keycloak
-    command: start --db postgres --hostname https://my.keycloak.org:8443 --hostname-backchannel-dynamic true --hostname-strict true --import-realm
+    command: start
     env_file: ".keycloak.env"
     depends_on:
       keycloak-postgres:
         condition: service_healthy
     ports:
       - "8443:8443"
+      - "8080:8080"
     healthcheck:
       start_period: 10s
       interval: 30s

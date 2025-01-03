@@ -106,8 +106,8 @@ internal static class HostingExtensions
             .AllowAnyHeader();
 
             builder.WithOrigins(
-                "http://localhost:4000",
-                "https://localhost:4001")
+                "http://localhost:5000",
+                "https://localhost:5001")
             .AllowCredentials()
             .AllowAnyHeader()
             .AllowAnyMethod();

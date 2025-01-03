@@ -40,7 +40,7 @@ internal static class ServiceCollectionExtensions
                     AuthorizationCode = new OpenApiOAuthFlow
                     {
                         AuthorizationUrl = new Uri(keycloakOptions.AuthorizationUrl),
-                        TokenUrl = new Uri("https://my.keycloak.org:8443/realms/Brainboost/protocol/openid-connect/token"),
+                        TokenUrl = new Uri(keycloakOptions.TokenUrl),
                         Scopes = new Dictionary<string, string>
                         {
                             { "openid", "openid" },

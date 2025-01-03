@@ -274,3 +274,4 @@ __pycache__/
 *.key
 *.pem
 *.env
+*.json

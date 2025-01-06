@@ -46,18 +46,7 @@ internal static class HostingExtensions
                     ValidIssuer = authOptions.ValidIssuer,
                     ValidAudiences = authOptions.Audience,
                     ValidateIssuerSigningKey = true,
-                    ValidateLifetime = true,
-                    IssuerSigningKey = new JsonWebKey()
-                    {
-                        Kid = jwkOptions.Kid,
-                        Kty = jwkOptions.Kty,
-                        Alg = jwkOptions.Alg,
-                        Use = jwkOptions.Use,
-                        N = jwkOptions.N,
-                        E = jwkOptions.E,
-                        X5t = jwkOptions.X5t,
-                        X5tS256 = jwkOptions.X5tS256
-                    }
+                    ValidateLifetime = true
                 };
                 o.ConfigurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
                     authOptions.MetadataAddress,

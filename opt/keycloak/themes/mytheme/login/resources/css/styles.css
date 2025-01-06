@@ -39,6 +39,7 @@ body{
     color: #0a143d;
     font-size: 25px;
     font-weight: bold;
+    font: ComicSans MS;
 }
 
 .pf-v5-c-form-control {

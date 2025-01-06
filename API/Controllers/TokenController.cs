@@ -67,14 +67,14 @@ public class TokenController : ControllerBase
             }
         };
 
-        ClaimsPrincipal claimsPrincipal = tokenHandler.ValidateToken(authToken, validationParameters, out SecurityToken securityToken);
+        ClaimsPrincipal claimsPrincipal = tokenHandler.ValidateToken(authToken, validationParameters, out SecurityToken validatedToken);
 
-        if (claimsPrincipal == null || securityToken == null)
+        if (claimsPrincipal is null || validatedToken is null)
         {
             _logger.LogError("Error validating token.");
             throw new UnauthorizedAccessException();
         }
 
-        return _userService.GetMyProfile(claimsPrincipal);
+        return Ok(_userService.GetMyProfile(claimsPrincipal));
     }
 }

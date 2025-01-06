@@ -21,6 +21,7 @@ internal static class HostingExtensions
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGenWithAuth(builder.Configuration);
+        builder.Configuration.AddJsonFile("appsettings.json");
         builder.Host.UseSerilog();
 
         //TODO: В рабочей среде заменить на динамическое получение ключа подписи.
@@ -46,7 +47,18 @@ internal static class HostingExtensions
                     ValidIssuer = authOptions.ValidIssuer,
                     ValidAudiences = authOptions.Audience,
                     ValidateIssuerSigningKey = true,
-                    ValidateLifetime = true
+                    ValidateLifetime = true,
+                    IssuerSigningKey = new JsonWebKey()
+                    {
+                        Kid = jwkOptions.Kid,
+                        Kty = jwkOptions.Kty,
+                        Alg = jwkOptions.Alg,
+                        Use = jwkOptions.Use,
+                        N = jwkOptions.N,
+                        E = jwkOptions.E,
+                        X5t = jwkOptions.X5t,
+                        X5tS256 = jwkOptions.X5tS256
+                    }
                 };
                 o.ConfigurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
                     authOptions.MetadataAddress,

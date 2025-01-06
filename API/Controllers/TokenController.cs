@@ -4,6 +4,7 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Options;
 using API.Options;
+using Application.Abstraction.UserAbstraction;
 
 namespace API.Controllers;
 
@@ -17,16 +18,20 @@ public class TokenController : ControllerBase
     private readonly JsonWebKeyOptions _jwkOpt;
     private readonly AuthenticationOptions _authOpt;
     private readonly ILogger<TokenController> _logger;
+    private readonly IUserService _userService;
 
     public TokenController(
         IOptionsSnapshot<JsonWebKeyOptions> jwkOpt,
         IOptionsSnapshot<AuthenticationOptions> authOpt,
-        ILogger<TokenController> logger)
+        ILogger<TokenController> logger,
+        IUserService userService)
     {
         _jwkOpt = jwkOpt.Value;
         _authOpt = authOpt.Value;
         _logger = logger;
+        _userService = userService;
     }
+
     [HttpPost("validate-jwt-token-keycloak")]
     public ActionResult<Dictionary<string, string>> ValidateJwtTokenKeycloak(string authToken)
     {
@@ -62,26 +67,14 @@ public class TokenController : ControllerBase
             }
         };
 
-        ClaimsPrincipal principal = tokenHandler.ValidateToken(authToken, validationParameters, out SecurityToken securityToken);
+        ClaimsPrincipal claimsPrincipal = tokenHandler.ValidateToken(authToken, validationParameters, out SecurityToken securityToken);
 
-        if (principal == null || securityToken == null)
+        if (claimsPrincipal == null || securityToken == null)
         {
             _logger.LogError("Error validating token.");
             throw new UnauthorizedAccessException();
         }
 
-        List<string> claimTypes = new(
-            [
-                ClaimTypes.Email,
-                ClaimTypes.NameIdentifier,
-                ClaimTypes.Role, ClaimTypes.GivenName,
-                ClaimTypes.Surname,
-                "preferred_username"
-            ]);
-
-        return claimTypes
-            .Select(type => principal.Claims.FirstOrDefault(c => c.Type == type))
-            .Where(c => c != null)
-            .ToDictionary(c => c!.Type, c => c!.Value);
+        return _userService.GetMyProfile(claimsPrincipal);
     }
 }

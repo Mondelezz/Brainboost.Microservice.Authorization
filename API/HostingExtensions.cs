@@ -18,10 +18,14 @@ internal static class HostingExtensions
             .GetSection(nameof(AuthenticationOptions))
             .Get<AuthenticationOptions>()!;
 
+        builder.Configuration.AddJsonFile("appsettings.json");
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGenWithAuth(builder.Configuration);
-        builder.Configuration.AddJsonFile("appsettings.json");
+        builder.Services.Configure<JsonWebKeyOptions>(builder.Configuration.GetSection("JsonWebKeyOptions"));
+        builder.Services.Configure<AuthenticationOptions>(builder.Configuration.GetSection("AuthenticationOptions"));
+        builder.Services.Configure<KeycloakOptions>(builder.Configuration.GetSection("KeycloakOptions"));
+
         builder.Host.UseSerilog();
 
         //TODO: В рабочей среде заменить на динамическое получение ключа подписи.

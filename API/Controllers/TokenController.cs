@@ -16,16 +16,23 @@ public class TokenController : ControllerBase
 {
     private readonly JsonWebKeyOptions _jwkOpt;
     private readonly AuthenticationOptions _authOpt;
-    public TokenController(IOptions<JsonWebKeyOptions> jwkOpt, IOptions<AuthenticationOptions> authOpt)
+    private readonly ILogger<TokenController> _logger;
+
+    public TokenController(
+        IOptionsSnapshot<JsonWebKeyOptions> jwkOpt,
+        IOptionsSnapshot<AuthenticationOptions> authOpt,
+        ILogger<TokenController> logger)
     {
         _jwkOpt = jwkOpt.Value;
         _authOpt = authOpt.Value;
+        _logger = logger;
     }
     [HttpPost("validate-token")]
     public ActionResult<Dictionary<string, string>> ValidateToken(string authToken)
     {
         if (string.IsNullOrEmpty(authToken))
         {
+            _logger.LogWarning("Token is missing.");
             return BadRequest("Token is missing.");
         }
 
@@ -49,7 +56,7 @@ public class TokenController : ControllerBase
                 Alg = _jwkOpt.Alg,
                 Use = _jwkOpt.Use,
                 N = _jwkOpt.N,
-                E = _jwkOpt.N,
+                E = _jwkOpt.E,
                 X5t = _jwkOpt.X5t,
                 X5tS256 = _jwkOpt.X5tS256
             }
@@ -59,6 +66,7 @@ public class TokenController : ControllerBase
 
         if (principal == null || securityToken == null)
         {
+            _logger.LogError("Error validating token.");
             throw new UnauthorizedAccessException();
         }
 

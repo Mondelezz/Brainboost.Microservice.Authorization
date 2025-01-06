@@ -27,8 +27,8 @@ public class TokenController : ControllerBase
         _authOpt = authOpt.Value;
         _logger = logger;
     }
-    [HttpPost("validate-token")]
-    public ActionResult<Dictionary<string, string>> ValidateToken(string authToken)
+    [HttpPost("validate-jwt-token-keycloak")]
+    public ActionResult<Dictionary<string, string>> ValidateJwtTokenKeycloak(string authToken)
     {
         if (string.IsNullOrEmpty(authToken))
         {

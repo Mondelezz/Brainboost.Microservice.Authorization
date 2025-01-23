@@ -11,11 +11,15 @@ public sealed class UserServiceTest(KeycloakFactoryFixture keycloakFactory)
         ?? string.Empty;
     private readonly HttpClient _client = new();
 
-    // Область и клиент сервера Keycloak
+    /// <summary>
+    /// Область и клиент сервера Keycloak
+    /// </summary>
     private const string Realm = "Brainboost";
     private const string Client = "brainboost";
 
-    // Данные для тестирования
+    /// <summary>
+    /// Данные для тестирования
+    /// </summary>
     private const string Username = "Vlad";
     private const string Password = "1q2w3e4r";
     private const string GrantType = "password";
@@ -25,14 +29,14 @@ public sealed class UserServiceTest(KeycloakFactoryFixture keycloakFactory)
     {
         // Arrange
         string urlToken = $"{_baseAddress}/realms/{Realm}/protocol/openid-connect/token";
-        string requestUri = "api/v1/users/get-my-profile";
+        const string requestUri = "api/v1/users/get-my-profile";
 
         Dictionary<string, string> data = new()
         {
-            { "grant_type", $"{GrantType}" },
-            { "client_id", $"{Client}" },
-            { "username", $"{Username}" },
-            { "password", $"{Password}" }
+            { "grant_type", GrantType },
+            { "client_id", Client },
+            { "username", Username },
+            { "password", Password }
         };
 
         HttpResponseMessage response = await _client.PostAsync(urlToken, new FormUrlEncodedContent(data));

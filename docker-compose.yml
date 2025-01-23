@@ -77,17 +77,3 @@ services:
       - ./Keycloak.Tests/bin/Debug/net8.0/Certs:/opt/keycloak/certs
       - ./opt/keycloak/themes:/opt/keycloak/themes
 
-  prometheus:
-    image: prom/prometheus:latest
-    container_name: Prometheus
-    ports:
-      - "9090:9090"
-
-  jaeger:
-    image: jaegertracing/all-in-one:latest
-    container_name: Jaeger
-    ports:
-      - "4317:4317"
-      - "4318:4318"
-      - "16686:16686"
-
